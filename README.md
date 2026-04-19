@@ -49,7 +49,7 @@ Code is split into:
 
 ```bash
 git clone https://github.com/mahespaulj/Tredence-Full-Stack-Case-Study.git
-cd hr-workflow-designer
+cd Tredence-Full-Stack-Case-Study
 npm install
 npm run dev
 ```
