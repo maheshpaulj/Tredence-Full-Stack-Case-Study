@@ -48,7 +48,7 @@ Code is split into:
 **Steps:**
 
 ```bash
-git clone https://github.com/mahespaulj/hr-workflow-designer.git
+git clone https://github.com/mahespaulj/Tredence-Full-Stack-Case-Study.git
 cd hr-workflow-designer
 npm install
 npm run dev
