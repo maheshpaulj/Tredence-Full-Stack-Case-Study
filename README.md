@@ -24,6 +24,7 @@ A simple drag-and-drop tool to design HR workflows visually. Built using Next.js
 ## Architecture
 
 This is basically a client-side app built with Next.js.
+![Architecture Diagram](public/architecture.png)
 
 * **Next.js (App Router)** for structure (runs fully on client for now)
 * **React Flow** handles the graph (nodes, edges, zoom, drag, etc.)
