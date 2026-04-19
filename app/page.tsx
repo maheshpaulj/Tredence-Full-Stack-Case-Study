@@ -359,10 +359,14 @@ const Sidebar = () => {
 export default function WorkflowDesignerPage() {
   return (
     <div className="flex h-screen flex-col bg-gray-50 overflow-hidden text-gray-900 font-sans">
-      <header className="h-14 border-b bg-white flex items-center px-4 shadow-sm z-20 shrink-0">
+      <header className="h-14 border-b bg-white flex items-center justify-between px-4 shadow-sm z-20 shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-indigo-600 rounded flex items-center justify-center text-white font-bold text-xs tracking-wider">HR</div>
           <h1 className="font-semibold text-sm text-gray-800">Workflow Builder</h1>
+        </div>
+        <div className="flex items-center justify-center gap-1">
+          <p className='text-sm'>Built by</p>
+          <a href="https://maheshpaul.is-a.dev/" target='_blank' className='font-bold hover:scale-95 transition-all'>Mahesh Paul J</a>
         </div>
       </header>
       <div className="flex flex-1 overflow-hidden">
