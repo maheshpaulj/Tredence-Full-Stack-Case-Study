@@ -48,8 +48,8 @@ Code is split into:
 **Steps:**
 
 ```bash
-git clone https://github.com/mahespaulj/hr-workflow-designer.git
-cd hr-workflow-designer
+git clone https://github.com/mahespaulj/Tredence-Full-Stack-Case-Study.git
+cd Tredence-Full-Stack-Case-Study
 npm install
 npm run dev
 ```
