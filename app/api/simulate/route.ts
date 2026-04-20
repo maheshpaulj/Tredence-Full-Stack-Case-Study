@@ -91,7 +91,6 @@ function simulateWorkflow(nodes: Node[], edges: Edge[], forceError = false): Sim
       steps.push({ nodeId: currentNode.id, nodeType: currentNode.type, nodeTitle: title, status: 'error', message: `[FORCED] ${errMsg}`, timestamp: ts(), durationMs: duration });
       return { success: false, steps, finalMessage: errMsg, failedNodeId: currentNode.id, totalNodes: nodes.length, executedNodes: visited.size, requestId };
     }
-    // Build a meaningful message per node type
     let message = `Completed: ${title}`;
     if (currentNode.type === 'approvalNode') {
       message = `Approval granted by ${currentNode.data.approverRole || 'Approver'} for "${title}"`;

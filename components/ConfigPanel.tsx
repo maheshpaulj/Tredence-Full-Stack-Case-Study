@@ -8,8 +8,6 @@ import {
   Braces, List, AlertCircle, CheckCircle2,
 } from 'lucide-react';
 
-// ─── Form Field ─────────────────────────────────────────────────────────────
-
 const FormField = ({ label, help, children }: { label: string; help?: string; children: React.ReactNode }) => (
   <div>
     <label className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
@@ -19,8 +17,6 @@ const FormField = ({ label, help, children }: { label: string; help?: string; ch
     {children}
   </div>
 );
-
-// ─── API Explorer ────────────────────────────────────────────────────────────
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
@@ -94,7 +90,6 @@ function EndpointRow({ ep }: { ep: ApiEndpoint }) {
 
   return (
     <div className="border border-gray-200 dark:border-[#3a3a3a] rounded-md overflow-hidden mb-1">
-      {/* Row header */}
       <button
         onClick={() => setOpen(v => !v)}
         className="w-full flex items-center gap-2 px-2.5 py-2 text-left hover:bg-gray-50 dark:hover:bg-[#1e1e1e] transition-colors"
@@ -108,10 +103,8 @@ function EndpointRow({ ep }: { ep: ApiEndpoint }) {
 
       {open && (
         <div className="border-t border-gray-100 dark:border-[#3a3a3a] bg-gray-50 dark:bg-[#1e1e1e] px-3 py-2.5 space-y-2.5">
-          {/* Summary */}
           <p className="text-[11px] text-gray-500 dark:text-gray-400">{ep.summary}</p>
 
-          {/* Tab switcher */}
           <div className="flex gap-1">
             {ep.requestBody && (
               <button
@@ -129,7 +122,6 @@ function EndpointRow({ ep }: { ep: ApiEndpoint }) {
             </button>
           </div>
 
-          {/* Body tab */}
           {tab === 'request' && ep.requestBody && (
             <div>
               <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mb-1 uppercase tracking-wider">{ep.requestBody.type}</p>
@@ -139,7 +131,6 @@ function EndpointRow({ ep }: { ep: ApiEndpoint }) {
             </div>
           )}
 
-          {/* Response tab */}
           {tab === 'response' && (
             <div>
               <p className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 mb-1 uppercase tracking-wider">{ep.response.type}</p>
@@ -149,7 +140,6 @@ function EndpointRow({ ep }: { ep: ApiEndpoint }) {
             </div>
           )}
 
-          {/* Status badge */}
           <div className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400">
             <CheckCircle2 size={11} /> 200 OK — Mock endpoint active
           </div>
@@ -168,7 +158,6 @@ function ApiExplorer() {
 
   return (
     <div className="border-t border-gray-200 dark:border-[#3a3a3a]">
-      {/* Section header */}
       <button
         onClick={() => setExpanded(v => !v)}
         className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-[#1e1e1e] transition-colors"
@@ -185,7 +174,6 @@ function ApiExplorer() {
 
       {expanded && (
         <div className="px-3 pb-3">
-          {/* Base URL */}
           <div className="flex items-center gap-1.5 mb-3 px-1">
             <span className="text-[10px] text-gray-400 dark:text-gray-500 font-mono">base:</span>
             <code className="text-[10px] font-mono bg-gray-100 dark:bg-[#1e1e1e] text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded">
@@ -193,10 +181,8 @@ function ApiExplorer() {
             </code>
           </div>
 
-          {/* Groups / folder tree */}
           {API_REGISTRY.map(group => (
             <div key={group.name} className="mb-1">
-              {/* Folder row */}
               <button
                 onClick={() => toggleGroup(group.name)}
                 className="w-full flex items-center gap-1.5 px-1.5 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors"
@@ -215,7 +201,6 @@ function ApiExplorer() {
                   : <ChevronRight size={11} className="text-gray-400 shrink-0" />}
               </button>
 
-              {/* Endpoints under this group */}
               {openGroups[group.name] && (
                 <div className="ml-4 mt-1 border-l-2 border-gray-200 dark:border-[#3a3a3a] pl-2">
                   {group.endpoints.map((ep, i) => (
@@ -230,8 +215,6 @@ function ApiExplorer() {
     </div>
   );
 }
-
-// ─── Main ConfigPanel ────────────────────────────────────────────────────────
 
 export default function ConfigPanel() {
   const { nodes, selectedNodeId, updateNodeData } = useWorkflowStore();
@@ -333,7 +316,6 @@ export default function ConfigPanel() {
                 ))}
               </select>
             )}
-            {/* Show params for selected action */}
             {data.actionId && !loadingAutomations && (() => {
               const action = automations.find(a => a.id === data.actionId);
               return action ? (
@@ -386,13 +368,11 @@ export default function ConfigPanel() {
       className="relative bg-white dark:bg-[#262626] border-l border-gray-200 dark:border-[#3a3a3a] shadow-sm flex flex-col z-20"
       style={{ width: `${width}px` }}
     >
-      {/* Resize handle */}
       <div
         className="absolute left-0 top-0 bottom-0 w-1.5 cursor-col-resize hover:bg-indigo-400 active:bg-indigo-600 transition-colors z-30"
         onMouseDown={e => { e.preventDefault(); setIsDragging(true); document.body.style.userSelect = 'none'; }}
       />
 
-      {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-[#3a3a3a] shrink-0">
         <div className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
           <Settings2 size={18} />
@@ -403,7 +383,6 @@ export default function ConfigPanel() {
         </button>
       </div>
 
-      {/* Node form */}
       <div className="p-4 overflow-y-auto flex-1 min-h-0">
         {selectedNode ? (
           <div key={selectedNode.id} className="flex flex-col gap-4 animate-in fade-in duration-200">
@@ -416,7 +395,6 @@ export default function ConfigPanel() {
         )}
       </div>
 
-      {/* API Explorer section */}
       <ApiExplorer />
     </div>
   );

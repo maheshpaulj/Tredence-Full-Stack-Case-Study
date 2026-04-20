@@ -47,10 +47,7 @@ body {
   }
 }
 
-/* ─── ReactFlow dark mode overrides ─── */
-/* These elements use inline styles / internal classes that Tailwind dark: can't reach */
-
-/* Controls panel (zoom in/out/fit buttons) */
+/* ReactFlow dark mode overrides — these use inline styles/internal classes that Tailwind dark: can't reach */
 html.dark .react-flow__controls {
   background-color: #262626;
   border: 1px solid #3a3a3a;
@@ -69,7 +66,6 @@ html.dark .react-flow__controls-button svg {
   fill: #e8e8e8;
 }
 
-/* MiniMap */
 html.dark .react-flow__minimap {
   background-color: #262626;
   border: 1px solid #3a3a3a;
@@ -82,13 +78,11 @@ html.dark .react-flow__minimap-node {
   stroke: #555;
 }
 
-/* Background dot grid */
 html.dark .react-flow__background pattern circle,
 html.dark .react-flow__background pattern rect {
   fill: #444;
 }
 
-/* Attribution */
 html.dark .react-flow__attribution {
   background: rgba(38, 38, 38, 0.8);
   color: #888;
@@ -97,24 +91,20 @@ html.dark .react-flow__attribution a {
   color: #aaa;
 }
 
-/* Edge path */
 html.dark .react-flow__edge-path {
   stroke: #777;
 }
 
-/* Node handles */
 html.dark .react-flow__handle {
   border-color: #2f2f2f;
 }
 
-/* ReactFlow pane + wrapper background */
 html.dark .react-flow__pane,
 html.dark .react-flow__renderer,
 html.dark .react-flow {
   background-color: #1e1e1e;
 }
 
-/* ReactFlow panel (wraps controls/minimap) */
 html.dark .react-flow__panel {
   background: transparent;
 }

@@ -59,7 +59,6 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   onEdgesChange: (changes) => set({ edges: applyEdgeChanges(changes, get().edges) }),
   onConnect: (connection) => {
     get().saveHistory();
-    // Default style for new connections (thicker line)
     const newEdge = { ...connection, style: { strokeWidth: 3, stroke: '#9ca3af' } };
     set({ edges: addEdge(newEdge, get().edges) });
   },

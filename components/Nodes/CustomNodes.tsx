@@ -1,10 +1,7 @@
 "use client";
-import React from 'react';
 import { Handle, Position } from 'reactflow';
 import { useWorkflowStore } from '@/store/useWorkflowStore';
 import { AlertCircle, Play, CheckSquare, UserCheck, Zap, Flag } from 'lucide-react';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
 
 const ErrorBadge = ({ error }: { error?: string }) => {
   if (!error) return null;
@@ -15,12 +12,6 @@ const ErrorBadge = ({ error }: { error?: string }) => {
   );
 };
 
-/**
- * Handle sits centred on the node's border edge.
- * ReactFlow already centres it horizontally/vertically;
- * we just need to shift it half its own height out so it straddles the border.
- * Handle size = 14px  →  translate ±7px = 50%.
- */
 const CustomHandle = ({ type, position }: { type: 'source' | 'target', position: Position }) => {
   const edgeShift: Record<Position, string> = {
     [Position.Top]:    '!-translate-y-1/2',
@@ -37,17 +28,12 @@ const CustomHandle = ({ type, position }: { type: 'source' | 'target', position:
   );
 };
 
-/** Selection / error-highlight ring classes — shape-agnostic. */
 const getStateClasses = (selected: boolean, highlighted: boolean) => {
   if (highlighted) return 'border-red-500 ring-4 ring-red-200 dark:ring-red-900/40 shadow-lg animate-pulse-red';
   if (selected)    return 'border-indigo-500 ring-4 ring-indigo-100 dark:ring-indigo-900/40 shadow-lg';
   return '';
 };
 
-/**
- * Decides whether text on top of `hex` should be dark or light,
- * using the W3C relative-luminance formula.
- */
 function readableTextColor(hex: string): string {
   const c = hex.replace('#', '');
   const r = parseInt(c.slice(0, 2), 16) / 255;
@@ -57,8 +43,6 @@ function readableTextColor(hex: string): string {
   const L = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
   return L > 0.179 ? '#1a1a1a' : '#f0f0f0';
 }
-
-// ─── Nodes ──────────────────────────────────────────────────────────────────
 
 export const StartNode = ({ id, data, selected }: { id: string, data: any, selected: boolean }) => {
   const highlighted  = useWorkflowStore(s => s.highlightedNodeId === id);
@@ -94,7 +78,6 @@ export const TaskNode = ({ id, data, selected }: { id: string, data: any, select
   const textColor     = data.bgColor ? readableTextColor(data.bgColor) : undefined;
 
   return (
-    // NO overflow-hidden here — it clips the handle dots. Use rounded-t-lg on header instead.
     <div
       className={`relative flex flex-col min-w-[160px] border-2 rounded-lg shadow-sm hover:shadow-md transition-all ${defaultBorder} ${stateClass}`}
       style={{ backgroundColor: bg }}
@@ -134,14 +117,12 @@ export const ApprovalNode = ({ id, data, selected }: { id: string, data: any, se
 
   return (
     <div className="relative group min-w-[180px]" style={{ height: '72px' }}>
-      {/* Skewed parallelogram — selection ring follows this element */}
       <div
         className={`absolute inset-0 border-2 -skew-x-[15deg] rounded-md shadow-sm transition-all group-hover:shadow-md ${defaultBorder} ${stateClass}`}
         style={{ backgroundColor: bg }}
       />
       <ErrorBadge error={data.error} />
       <CustomHandle type="target" position={Position.Top} />
-      {/* Un-skewed content */}
       <div className="relative h-full flex flex-col items-center justify-center text-center z-10 px-8">
         <UserCheck size={18} className={`mb-1 ${!data.bgColor ? 'text-orange-500' : ''}`} style={{ color: data.bgColor ? textColor : undefined }} />
         <span className={`font-bold text-sm ${!data.bgColor ? 'text-gray-900 dark:text-gray-100' : ''}`} style={{ color: textColor }}>

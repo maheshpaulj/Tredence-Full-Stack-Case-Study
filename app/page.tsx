@@ -41,12 +41,10 @@ const ThemeToggle = () => {
     </button>
   );
 };
-// --- REUSABLE OVERWRITE WARNING MODAL ---
 const OverwriteWarningModal = ({ isOpen, onClose, onConfirm, exportJSON }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; exportJSON: () => string; }) => {
   if (!isOpen) return null;
 
   const handleSaveAndConfirm = () => {
-    // 1. Download Backup
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(exportJSON());
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
@@ -54,8 +52,6 @@ const OverwriteWarningModal = ({ isOpen, onClose, onConfirm, exportJSON }: { isO
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
-    
-    // 2. Proceed with overwrite
     onConfirm();
   };
 
@@ -89,7 +85,6 @@ const OverwriteWarningModal = ({ isOpen, onClose, onConfirm, exportJSON }: { isO
   );
 };
 
-// --- WORKFLOW CANVAS ---
 function WorkflowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -107,7 +102,6 @@ function WorkflowCanvas() {
     setIsErrorModalOpen(true);
   };
 
-  // Prevent accidental refresh
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (nodes.length > 0) {
@@ -159,14 +153,14 @@ function WorkflowCanvas() {
     reader.onload = (e) => {
       const content = e.target?.result as string;
       if (nodes.length > 0) {
-        setPendingImportContent(content); // Show warning modal
+        setPendingImportContent(content);
       } else {
-        importJSON(content); // Direct import if canvas is empty
+        importJSON(content);
       }
       setShowMoreMenu(false);
     };
     reader.readAsText(file);
-    event.target.value = ''; // Reset file input so you can select the same file again
+    event.target.value = '';
   };
 
   const confirmImport = () => {
@@ -178,8 +172,6 @@ function WorkflowCanvas() {
 
   return (
     <div className="flex-1 relative flex flex-col h-full w-full bg-gray-50 dark:bg-[#1e1e1e] transition-colors duration-200" onClick={closeMenus} onContextMenu={(e) => handleContextMenu(e, 'pane')}>
-      
-      {/* Import Warning Modal */}
       <OverwriteWarningModal 
         isOpen={!!pendingImportContent} 
         onClose={() => setPendingImportContent(null)} 
@@ -189,13 +181,10 @@ function WorkflowCanvas() {
 
       <ErrorModal isOpen={isErrorModalOpen} onClose={() => setIsErrorModalOpen(false)} details={errorDetails} />
 
-      {/* THICK EDGE STYLE OVERRIDE */}
       <style>{`
         .react-flow__edge.selected .react-flow__edge-path { stroke: #6366f1 !important; stroke-width: 5px !important; filter: drop-shadow(0 0 6px rgba(99, 102, 241, 0.6)); }
         .react-flow__edge:hover .react-flow__edge-path { stroke: #818cf8 !important; }
       `}</style>
-
-      {/* FLOATING TOP-LEFT TOOLBAR */}
       <div className="absolute top-4 left-4 z-10 flex items-center gap-1 bg-white dark:bg-[#262626] dark:border-[#3a3a3a] p-1.5 rounded-lg shadow-md border border-gray-200" onClick={e => e.stopPropagation()}>
         <button onClick={undo} className="p-1.5 hover:bg-gray-100 dark:hover:bg-[#333] rounded text-gray-700 dark:text-gray-300 transition-colors" title="Undo"><Undo2 size={16} /></button>
         <button onClick={redo} className="p-1.5 hover:bg-gray-100 dark:hover:bg-[#333] rounded text-gray-700 dark:text-gray-300 transition-colors" title="Redo"><Redo2 size={16} /></button>
@@ -231,7 +220,6 @@ function WorkflowCanvas() {
         </div>
       </div>
 
-      {/* REACT FLOW CANVAS */}
       <div className="flex-1" ref={reactFlowWrapper} style={{ background: isDark ? '#1e1e1e' : '#f9fafb' }}>
         <ReactFlow
           nodes={nodes} edges={edges} nodeTypes={nodeTypes}
@@ -249,7 +237,6 @@ function WorkflowCanvas() {
         </ReactFlow>
       </div>
 
-      {/* RIGHT-CLICK CONTEXT MENU */}
       {menu.show && (
         <div className="absolute z-50 bg-white dark:bg-[#262626] border border-gray-200 dark:border-[#3a3a3a] shadow-xl rounded-md py-1 w-48 text-sm" style={{ top: menu.y, left: menu.x }} onClick={e => e.stopPropagation()}>
           {menu.type === 'pane' && (
@@ -300,7 +287,6 @@ function WorkflowCanvas() {
   );
 }
 
-// --- SIDEBAR & TEMPLATES ---
 const Sidebar = () => {
   const { nodes, setNodesAndEdges, exportJSON } = useWorkflowStore();
   const [pendingTemplate, setPendingTemplate] = useState<'onboarding' | 'leave' | null>(null);
@@ -397,7 +383,6 @@ const Sidebar = () => {
   );
 };
 
-// --- MAIN WRAPPER ---
 export default function WorkflowDesignerPage() {
 
   return (

@@ -1,7 +1,6 @@
 import { Node, Edge } from 'reactflow';
 
 export const getAutomations = async () => {
-  // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 500));
   return [
     { id: "send_email", label: "Send Email", params: ["to", "subject", "body"] },
@@ -16,7 +15,6 @@ export const simulateWorkflow = async (payload: { nodes: Node[]; edges: Edge[] }
   const { nodes, edges } = payload;
   const logs: string[] = [];
   
-  // Basic topological simulation
   let currentNode = nodes.find(n => n.type === 'startNode');
   if (!currentNode) throw new Error("No Start Node found");
 
@@ -25,7 +23,6 @@ export const simulateWorkflow = async (payload: { nodes: Node[]; edges: Edge[] }
   let steps = 0;
   while (currentNode && steps < 50) {
     steps++;
-    // Find outbound edge
     const outboundEdge = edges.find(e => e.source === currentNode?.id);
     if (!outboundEdge) {
       if (currentNode.type !== 'endNode') {
@@ -39,7 +36,6 @@ export const simulateWorkflow = async (payload: { nodes: Node[]; edges: Edge[] }
     const nextNode = nodes.find(n => n.id === outboundEdge.target);
     if (!nextNode) break;
 
-    // Log the step execution
     if (nextNode.type === 'approvalNode') {
       logs.push(`[APPROVAL] Pending review from '${nextNode.data.approverRole}'. Threshold set to ${nextNode.data.autoApproveThreshold}.`);
     } else if (nextNode.type === 'automatedNode') {

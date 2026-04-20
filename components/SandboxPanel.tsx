@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp, Terminal, Play, Loader2, CheckCircle, XCircle, 
 
 type StepStatus = 'running' | 'success' | 'error';
 
-// UI simulation step (for the visualizer tab, shown with animation)
 type VisStep = {
   nodeId:    string;
   nodeTitle: string;
@@ -14,7 +13,6 @@ type VisStep = {
   timestamp: string;
 };
 
-// Raw API response shape
 interface ApiStep {
   nodeId:     string;
   nodeType:   string;
@@ -35,8 +33,6 @@ interface SimulateResponse {
   requestId:     string;
 }
 
-// ─── Raw Log Line model ────────────────────────────────────────────────────
-
 type LogKind = 'system' | 'request' | 'response' | 'step-ok' | 'step-err' | 'step-run' | 'result-ok' | 'result-err';
 
 interface LogLine {
@@ -48,8 +44,6 @@ interface LogLine {
 function nowStr() {
   return new Date().toISOString().split('T')[1].replace('Z', '');
 }
-
-// ─── Component ─────────────────────────────────────────────────────────────
 
 export default function SandboxPanel({ showErrorModal }: {
   showErrorModal: (details: { title: string; message: string }) => void;
@@ -69,12 +63,10 @@ export default function SandboxPanel({ showErrorModal }: {
 
   const rawEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll raw logs
   useEffect(() => {
     rawEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [rawLog]);
 
-  // Resize drag
   useEffect(() => {
     if (!isDragging) return;
     const onMouseMove = (e: MouseEvent) => {
@@ -111,7 +103,6 @@ export default function SandboxPanel({ showErrorModal }: {
     const payloadStr = JSON.stringify(payload);
     const bodyBytes = new TextEncoder().encode(payloadStr).length;
 
-    // ── Log the outgoing request ──────────────────────────────────────────
     addLog('system',  `Simulation started — ${nodes.length} node(s), ${edges.length} edge(s)`);
     addLog('request', `POST /api/simulate HTTP/1.1`);
     addLog('request', `Content-Type: application/json`);
@@ -131,7 +122,6 @@ export default function SandboxPanel({ showErrorModal }: {
       const elapsed = Date.now() - t0;
       data = await res.json();
 
-      // ── Log the response headers/metadata ────────────────────────────
       addLog('response', `HTTP/1.1 ${res.status} ${res.ok ? 'OK' : 'ERROR'} — ${elapsed}ms`);
       addLog('response', `Request-Id: ${data.requestId}`);
       addLog('response', `Nodes processed: ${data.executedNodes}/${data.totalNodes}`);
@@ -146,9 +136,7 @@ export default function SandboxPanel({ showErrorModal }: {
       return;
     }
 
-    // ── Stream steps into the UI with per-step delays ─────────────────────
     for (const step of data.steps) {
-      // Show "running" for a moment before settling
       setVisSteps(prev => {
         const exists = prev.findIndex(s => s.nodeId === step.nodeId);
         const entry: VisStep = {
@@ -167,7 +155,6 @@ export default function SandboxPanel({ showErrorModal }: {
 
       await new Promise(r => setTimeout(r, Math.min(step.durationMs, 700)));
 
-      // Settle to final status
       setVisSteps(prev => {
         const exists = prev.findIndex(s => s.nodeId === step.nodeId);
         const entry: VisStep = {
@@ -185,7 +172,6 @@ export default function SandboxPanel({ showErrorModal }: {
       addLog(logKind, `[${step.nodeType.toUpperCase()}] ${step.nodeTitle} — ${step.message} (${step.durationMs}ms)`);
     }
 
-    // ── Final result ──────────────────────────────────────────────────────
     addLog('system', '─────────────────────────────────────');
 
     if (data.success) {
@@ -206,7 +192,6 @@ export default function SandboxPanel({ showErrorModal }: {
 
   const hasResults = visSteps.length > 0 || finalResult !== null || rawLog.length > 0;
 
-  // ── Log line coloring ────────────────────────────────────────────────────
   const logColor = (kind: LogKind): string => {
     const map: Record<LogKind, string> = {
       system:     isDark ? 'text-gray-500'      : 'text-gray-400',
@@ -235,7 +220,6 @@ export default function SandboxPanel({ showErrorModal }: {
     return map[kind] ?? '  ';
   };
 
-  // ── Minimized bar ────────────────────────────────────────────────────────
   if (isMinimized) {
     return (
       <div
@@ -255,10 +239,8 @@ export default function SandboxPanel({ showErrorModal }: {
   return (
     <div className="relative bg-white dark:bg-[#262626] border-t border-gray-200 dark:border-[#3a3a3a] shadow-inner flex flex-col z-20" style={{ height: `${height}px` }}>
 
-      {/* Drag handle */}
       <div className="absolute top-0 left-0 right-0 h-1.5 cursor-row-resize hover:bg-indigo-400 active:bg-indigo-600 transition-colors z-30" onMouseDown={e => { e.preventDefault(); setIsDragging(true); document.body.style.userSelect = 'none'; }} />
 
-      {/* Header */}
       <div className="flex justify-between items-center px-4 pt-2 border-b border-gray-100 dark:border-[#3a3a3a] shrink-0">
         <div className="flex items-center gap-2 border-b-2 border-transparent translate-y-[1px]">
           <button
@@ -299,10 +281,7 @@ export default function SandboxPanel({ showErrorModal }: {
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex-1 p-3 overflow-hidden bg-gray-50 dark:bg-[#1e1e1e]">
-
-        {/* ── Visualizer ── */}
         {activeTab === 'visualizer' && (
           <div className="h-full overflow-y-auto space-y-3">
             {visSteps.length === 0 && (
@@ -335,10 +314,8 @@ export default function SandboxPanel({ showErrorModal }: {
           </div>
         )}
 
-        {/* ── Raw Logs ── */}
         {activeTab === 'rawLog' && (
           <div className={`h-full overflow-y-auto rounded-lg p-4 text-xs font-mono shadow-inner ${isDark ? 'bg-[#0d1117]' : 'bg-gray-100 border border-gray-200'}`}>
-            {/* API endpoint info banner */}
             <div className={`mb-3 pb-2 border-b ${isDark ? 'border-gray-800 text-gray-600' : 'border-gray-300 text-gray-400'}`}>
               <span className={isDark ? 'text-gray-500' : 'text-gray-400'}>
                 <Wifi size={10} className="inline mr-1 mb-0.5" />

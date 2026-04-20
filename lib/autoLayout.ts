@@ -5,7 +5,6 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'T
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   
-  // A standard node width/height for layout calculation
   const nodeWidth = 172;
   const nodeHeight = 100;
 
