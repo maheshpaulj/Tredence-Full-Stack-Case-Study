@@ -6,6 +6,8 @@ interface WorkflowState {
   edges: Edge[];
   selectedNodeId: string | null;
   history: { past: { nodes: Node[]; edges: Edge[] }[]; future: { nodes: Node[]; edges: Edge[] }[] };
+  theme: 'light' | 'dark';
+  highlightedNodeId: string | null;
   
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
@@ -19,6 +21,10 @@ interface WorkflowState {
   deleteEdge: (id: string) => void;
   updateEdgeStyle: (id: string, color: string) => void;
   setNodesAndEdges: (nodes: Node[], edges: Edge[]) => void;
+  clearCanvas: () => void;
+  toggleTheme: () => void;
+  setTheme: (theme: 'light' | 'dark') => void;
+  setHighlightedNodeId: (id: string | null) => void;
   
   saveHistory: () => void;
   undo: () => void;
@@ -32,6 +38,8 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   edges: [],
   selectedNodeId: null,
   history: { past: [], future: [] },
+  theme: 'light',
+  highlightedNodeId: null,
 
   saveHistory: () => {
     const { nodes, edges, history } = get();
@@ -62,6 +70,11 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     get().saveHistory();
     set({ nodes: get().nodes.map((n) => n.id === id ? { ...n, data: { ...n.data, ...newData } } : n) });
   },
+
+  toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+  setTheme: (theme) => set({ theme }),
+  
+  setHighlightedNodeId: (id) => set({ highlightedNodeId: id }),
 
   addNode: (node) => {
     get().saveHistory();
@@ -104,6 +117,12 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     get().saveHistory();
     set({ nodes, edges });
   },
+
+  clearCanvas: () => {
+    get().saveHistory();
+    set({ nodes: [], edges: [], selectedNodeId: null });
+  },
+
 
   undo: () => {
     const { history, nodes, edges } = get();

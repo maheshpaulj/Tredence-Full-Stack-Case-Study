@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
+/* Tailwind v4: enable class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --surface: #f9fafb;
+  --border: #e5e7eb;
+  color-scheme: light;
+}
+
+html.dark {
+  --background: #1e1e1e;
+  --foreground: #e8e8e8;
+  --surface: #262626;
+  --border: #3a3a3a;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,15 +26,96 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+@layer utilities {
+  @keyframes pulse-red {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+  }
+  .animate-pulse-red {
+    animation: pulse-red 2s infinite;
+  }
+}
+
+/* ─── ReactFlow dark mode overrides ─── */
+/* These elements use inline styles / internal classes that Tailwind dark: can't reach */
+
+/* Controls panel (zoom in/out/fit buttons) */
+html.dark .react-flow__controls {
+  background-color: #262626;
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+html.dark .react-flow__controls-button {
+  background-color: #262626;
+  border-bottom: 1px solid #3a3a3a;
+  color: #e8e8e8;
+  fill: #e8e8e8;
+}
+html.dark .react-flow__controls-button:hover {
+  background-color: #333333;
+}
+html.dark .react-flow__controls-button svg {
+  fill: #e8e8e8;
+}
+
+/* MiniMap */
+html.dark .react-flow__minimap {
+  background-color: #262626;
+  border: 1px solid #3a3a3a;
+}
+html.dark .react-flow__minimap-mask {
+  fill: rgba(30, 30, 30, 0.6);
+}
+html.dark .react-flow__minimap-node {
+  fill: #3a3a3a;
+  stroke: #555;
+}
+
+/* Background dot grid */
+html.dark .react-flow__background pattern circle,
+html.dark .react-flow__background pattern rect {
+  fill: #444;
+}
+
+/* Attribution */
+html.dark .react-flow__attribution {
+  background: rgba(38, 38, 38, 0.8);
+  color: #888;
+}
+html.dark .react-flow__attribution a {
+  color: #aaa;
+}
+
+/* Edge path */
+html.dark .react-flow__edge-path {
+  stroke: #777;
+}
+
+/* Node handles */
+html.dark .react-flow__handle {
+  border-color: #2f2f2f;
+}
+
+/* ReactFlow pane + wrapper background */
+html.dark .react-flow__pane,
+html.dark .react-flow__renderer,
+html.dark .react-flow {
+  background-color: #1e1e1e;
+}
+
+/* ReactFlow panel (wraps controls/minimap) */
+html.dark .react-flow__panel {
+  background: transparent;
+}
+
